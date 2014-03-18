@@ -1,7 +1,10 @@
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Queue;
+import java.util.LinkedList;
 
 String[] phrases;
+String[] dictionary;
 int totalTrialNum = 4; //the total number of phrases to be tested - set this low for testing. Might be ~10 for the real bakeoff!
 int currTrialNum = 0; // the current trial number (indexes into trials array above)
 float startTime = 0; // time starts when the first letter is entered
@@ -12,12 +15,13 @@ float lettersExpectedTotal = 0; //a running total of the number of letters expec
 float errorsTotal = 0; //a running total of the number of errors (when hitting next)
 String currentPhrase = ""; //the current target phrase
 String currentTyped = ""; //what the user has typed so far
+String currentWord = "";
+int characters = 0;
+int lastSpace = 0;
 final int DPIofYourDeviceScreen = 441; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
                                       //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1.25; //aka, 1.25 inches square!
-
-//Variables for my silly implementation. You can delete these:
-char currentLetter = 'a';
+Trie t;
 
 //You can modify anything in here. This is just a basic implementation.
 void setup()
@@ -28,6 +32,14 @@ void setup()
   size(1000, 1000); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 36)); //set the font to arial 36
   noStroke(); //my code doesn't use any strokes.
+  
+  t = new Trie();
+  dictionary = loadStrings("dictionary.txt"); //load the dictionary set into memory
+  for(int i = 0; i < dictionary.length; i++)
+  {
+    t.insert(dictionary[i]); 
+  }
+  
 }
 
 //You can modify anything in here. This is just a basic implementation.
@@ -37,6 +49,7 @@ void draw()
 
   fill(100);
   rect(200, 200, sizeOfInputArea, sizeOfInputArea); //input area should be 2" by 2"
+  
 
   if (finishTime!=0)
   {
@@ -73,13 +86,30 @@ void draw()
     text("NEXT > ", 850, 100); //draw next label
 
 
-    //my draw code
-    textAlign(CENTER);
-    text("" + currentLetter, 200+sizeOfInputArea/2, 200+sizeOfInputArea/3); //draw current letter
-    fill(255, 0, 0);
-    rect(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
-    fill(0, 255, 0);
-    rect(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
+    //draw the grid
+    stroke(255,255,255);
+    line(200, 200+sizeOfInputArea/3, 200+sizeOfInputArea, 200+sizeOfInputArea/3);
+    line(200, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea, 200+2*sizeOfInputArea/3);
+    
+    line(200+sizeOfInputArea/3, 200, 200+sizeOfInputArea/3, 200+sizeOfInputArea);
+    line(200+2*sizeOfInputArea/3, 200, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea);
+    
+    //add text to the grid
+    fill(255,255,255);
+    textAlign(CENTER, CENTER);
+    text("Space\nBackspace", 200+sizeOfInputArea/6, 200+sizeOfInputArea/6);
+    text("A,B,C", 200+3*sizeOfInputArea/6, 200+sizeOfInputArea/6);
+    text("D,E,F", 200+5*sizeOfInputArea/6, 200+sizeOfInputArea/6);
+    
+    text("G,H,I", 200+sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
+    text("J,K,L", 200+3*sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
+    text("M,N,O", 200+5*sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
+    
+    text("P,Q,R,S", 200+sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
+    text("T,U,V", 200+3*sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
+    text("W,X,Y,Z", 200+5*sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
+    
+    stroke(0);
   }
 }
 
@@ -91,36 +121,176 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 
 void mousePressed()
 {
-
-  if (didMouseClick(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in left button
+  if(startTime > 0)
   {
-    currentLetter --;
-    if (currentLetter<'_') //wrap around to z
-      currentLetter = 'z';
+    boolean addLetter = false;
+    //Check if in upper left
+    if (didMouseClick(200, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      if(lastSpace == characters)
+      {
+        characters -= 2;
+        boolean foundSpace = false;
+        for(int j = characters; j >= 0; j--)
+        {
+          if(currentTyped.charAt(j) == ' ')
+          {
+            lastSpace = j;
+            foundSpace = true;
+            break; 
+          }
+        }
+        if(!foundSpace)
+        {
+          lastSpace = 0;
+        }
+        currentTyped = currentTyped.substring(0,characters);
+        currentWord = currentTyped.substring(lastSpace,characters);
+        currentWord = convertLetterstoNumbers(currentWord);
+      }
+      else
+      {
+        currentWord = "";
+        currentTyped += ' ';
+        characters++;
+        lastSpace = characters;
+      }
+    }
+    
+    //Check if in upper middle
+    else if (didMouseClick(200+sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      currentWord += '2';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in upper right
+    else if (didMouseClick(200+2*sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      currentWord += '3';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in middle left
+    else if (didMouseClick(200, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      currentWord += '4';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in middle middle
+    else if (didMouseClick(200+sizeOfInputArea/3, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      currentWord += '5';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in middle right
+    else if (didMouseClick(200+2*sizeOfInputArea/3, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      currentWord += '6';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in lower left
+    else if (didMouseClick(200, 200+2*sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      currentWord += '7';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in lower middle
+    else if (didMouseClick(200+sizeOfInputArea/3, 200+2*sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      currentWord += '8';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in lower right
+    else if (didMouseClick(200+2*sizeOfInputArea/3, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea, 200+sizeOfInputArea)) //check if click is in next button
+    {
+      currentWord += '9';
+      characters++;
+      addLetter = true;
+    }
+    
+    System.out.println("currentTyped ******"+currentTyped+"******"+"  currentWord *******"+currentWord+"******");
+    
+    //Predict the word
+    if(addLetter)
+    {
+      System.out.println(lastSpace);
+      if(lastSpace > 0)
+      {
+        currentTyped = currentTyped.substring(0, lastSpace);
+      }
+      else
+      {
+        currentTyped = "";
+      }
+      currentTyped += checkWord(currentWord);
+    }
   }
-
-  if (didMouseClick(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in right button
-  {
-    currentLetter ++;
-    if (currentLetter>'z') //wrap back to space (aka underscore)
-      currentLetter = '_';
-  }
-
-  if (didMouseClick(200, 200, sizeOfInputArea, sizeOfInputArea/2)) //check if click occured in letter area
-  {
-    if (currentLetter=='_') //if underscore, consider that a space bar
-      currentTyped+=" ";
-    else if (currentLetter=='`' & currentTyped.length()>0) //if `, treat that as a delete command
-      currentTyped = currentTyped.substring(0, currentTyped.length()-1);
-    else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
-      currentTyped+=currentLetter;
-  }
-
+  
   //You are allowed to have a next button outside the 2" area
   if (didMouseClick(800, 00, 200, 200)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
+}
+
+//This function will predict the word
+String checkWord(String currentWord)
+{
+  String word = t.bfs_search(currentWord);
+  if(word != null && !word.equals(""))
+  {
+    return word;
+  }
+  else
+  {
+    for(int i = 0; i < currentWord.length(); i++)
+    {
+      word = t.bfs_search(currentWord.substring(0,i+1));
+      if(word != null && !word.equals(""))
+      {
+        for(int j = 0; j < i; j++)
+        {
+          word += getCharbyNum(currentWord.charAt(currentWord.length()-j-1));
+        }
+        return word;
+      }
+    }
+    for(int j = 0; j < currentWord.length(); j++)
+    {
+      word += getCharbyNum(currentWord.charAt(currentWord.length()-j-1));
+    }
+    return word;
+  }
+}
+
+String convertLetterstoNumbers(String word)
+{
+  for(int i = 0; i < word.length(); i++)
+  {
+    if(word.charAt(i) > 57)
+    {
+      word = word.substring(0,i)+convertCharToNum(word.charAt(i))+word.substring(i+1);
+    }
+  }
+  return word; 
+}
+
+int convertCharToNum(char letter)
+{
+  return letter - 'a';
 }
 
 
@@ -173,10 +343,37 @@ void nextTrial()
 
   lastTime = millis(); //record the time of when this trial ended
   currentTyped = ""; //clear what is currently typed preparing for next trial
+  currentWord = "";
+  characters = 0;
+  lastSpace = 0;
   currentPhrase = phrases[currTrialNum]; // load the next phrase!
   //currentPhrase = "abc"; // uncomment this to override the test phrase (useful for debugging)
 }
 
+
+char getCharbyNum(char num)
+{
+  switch(num)
+  {
+    case '2':
+      return 'a';
+    case '3':
+      return 'd';
+    case '4':
+      return 'g';
+    case '5':
+      return 'j';
+    case '6':
+      return 'm';
+    case '7':
+      return 'p';
+    case '8':
+      return 't';
+    case '9':
+      return 'w';
+  }
+  return ' ';
+}
 
 
 
@@ -195,4 +392,141 @@ int computeLevenshteinDistance(String phrase1, String phrase2)
       distance[i][j] = min(min(distance[i - 1][j] + 1, distance[i][j - 1] + 1), distance[i - 1][j - 1] + ((phrase1.charAt(i - 1) == phrase2.charAt(j - 1)) ? 0 : 1));
 
   return distance[phrase1.length()][phrase2.length()];
+}
+
+
+
+
+
+
+
+
+
+
+public class Trie {
+  
+  private final int R = 26;  // the trie branches 
+  private Node root = new Node(); // the root node
+  
+  // the t9 mapped array which maps number to string on the typing board
+  private String[] t9 = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+  
+  // trie node definition
+  private class Node {
+    private boolean isWord;
+    private Node[] next;
+    
+    public Node() {
+      this(false);
+    }
+    
+    public Node(boolean isWord) {
+      this.isWord = isWord;
+      this.next = new Node[R];
+    }
+  }
+  
+  // insert a word to the trie
+  public void insert(String s) {
+    Node current = root;
+    
+    for(int i = 0; i < s.length(); i++) {
+      if(current.next[s.charAt(i) - 'a'] == null) {
+        Node n = new Node();
+        current.next[s.charAt(i) - 'a'] = n;
+      } 
+      
+      current = current.next[s.charAt(i) - 'a'];
+    }
+    
+    current.isWord = true;
+  }
+  
+  // insert a character to some node
+  public void insert(Node current, char c) {
+    if(current.next[c - 'a'] == null) {
+      Node node = new Node();
+      current.next[c - 'a'] = node;
+    }
+    current = current.next[c - 'a'];
+  }
+  
+  // search a word in the trie
+  public boolean search(String s) {
+    Node current = root;
+    
+    for(int i = 0; i < s.length(); i++) {
+      if(current.next[s.charAt(i) - 'a'] == null) {
+        return false;
+      } 
+      current = current.next[s.charAt(i) - 'a'];
+    }
+    
+    return current.isWord == true;
+  }
+  
+  // breadth first search for a number string use queue
+  public String bfs_search(String strNum) {
+    Queue<String> q = new LinkedList<String>();
+    
+    q.add("");
+    
+    for(int i = 0; i < strNum.length(); i++) {
+      String keyStr = t9[strNum.charAt(i) - '0'];
+      int len = q.size();
+      
+      while(len -- > 0) {
+        String preStr = q.remove();
+        for(int j = 0; j < keyStr.length(); j++) {
+          String tmpStr = preStr + keyStr.charAt(j);
+          //q.add(tmpStr);
+          if(search(tmpStr) && tmpStr.length() == strNum.length()) {
+            return tmpStr;
+          } else {
+            q.add(tmpStr);
+          }
+        }
+      }
+    }
+    return "";
+  }
+  
+  // delete a node
+  public void delete(Node node) {
+    for(int i = 0; i < R; i++) {
+      if(node.next != null) {
+        delete(node.next[i]);
+      }
+    }
+    node = null;
+  }
+  
+  // print words
+  public void print(Node node) {
+    if(node == null) return;
+    for(int i = 0; i < R; i++) {
+      if(node.next[i] != null) {
+        System.out.print((char) (97 + i));
+        if(node.next[i].isWord == true) {
+          System.out.println();
+        }
+        print(node.next[i]);
+      }
+      
+    }
+  }
+  
+  // print words from root
+  public void print() {
+    print(root);
+  }
+  
+  // convert number string to String array
+  private String[] numToString(String strNum) {
+    String[] strArray = new String[strNum.length()];
+    for(int i = 0; i < strNum.length(); i++) {
+      strArray[i] = t9[strNum.charAt(i) - '0'];
+    }
+    return strArray;
+  }
 }
