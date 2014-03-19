@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.ArrayList;
 
 String[] phrases;
 String[] dictionary;
@@ -18,6 +19,9 @@ String currentTyped = ""; //what the user has typed so far
 String currentWord = "";
 int characters = 0;
 int lastSpace = 0;
+ArrayList <String> currentMatches;
+int currentMatchLoc = 0;
+boolean clickedSpace = false;
 final int DPIofYourDeviceScreen = 441; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
                                       //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1.25; //aka, 1.25 inches square!
@@ -127,9 +131,118 @@ void mousePressed()
     //Check if in upper left
     if (didMouseClick(200, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
     {
-      if(lastSpace == characters)
+      clickedSpace = true;
+    }
+    
+    //Check if in upper middle
+    else if (didMouseClick(200+sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      clickedSpace = false;
+      currentWord += '2';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in upper right
+    else if (didMouseClick(200+2*sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      clickedSpace = false;
+      currentWord += '3';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in middle left
+    else if (didMouseClick(200, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      clickedSpace = false;
+      currentWord += '4';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in middle middle
+    else if (didMouseClick(200+sizeOfInputArea/3, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      clickedSpace = false;
+      currentWord += '5';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in middle right
+    else if (didMouseClick(200+2*sizeOfInputArea/3, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      clickedSpace = false;
+      currentWord += '6';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in lower left
+    else if (didMouseClick(200, 200+2*sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      clickedSpace = false;
+      currentWord += '7';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in lower middle
+    else if (didMouseClick(200+sizeOfInputArea/3, 200+2*sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    {
+      clickedSpace = false;
+      currentWord += '8';
+      characters++;
+      addLetter = true;
+    }
+    
+    //Check if in lower right
+    else if (didMouseClick(200+2*sizeOfInputArea/3, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea, 200+sizeOfInputArea)) //check if click is in next button
+    {
+      clickedSpace = false;
+      currentWord += '9';
+      characters++;
+      addLetter = true;
+    }
+    
+    System.out.println("currentTyped ******"+currentTyped+"******"+"  currentWord *******"+currentWord+"******");
+    
+    //Predict the word
+    if(addLetter)
+    {
+      System.out.println(lastSpace);
+      if(lastSpace > 0)
       {
-        characters -= 2;
+        currentTyped = currentTyped.substring(0, lastSpace);
+      }
+      else
+      {
+        currentTyped = "";
+      }
+      currentMatches = checkWord(currentWord);
+      currentMatchLoc = 0;
+      currentTyped += currentMatches.get(0);
+    }
+  }
+  
+  //You are allowed to have a next button outside the 2" area
+  if (didMouseClick(800, 00, 200, 200)) //check if click is in next button
+  {
+    clickedSpace = false;
+    nextTrial(); //if so, advance to next trial
+  }
+}
+
+void mouseReleased()
+{
+  if (didMouseClick(200, 200, sizeOfInputArea/3, sizeOfInputArea/3) && clickedSpace) //check if click is in next button
+  {
+    if(lastSpace == characters)
+    {
+      characters -= 2;
+      if(characters > 0)
+      {
         boolean foundSpace = false;
         for(int j = characters; j >= 0; j--)
         {
@@ -150,107 +263,46 @@ void mousePressed()
       }
       else
       {
-        currentWord = "";
-        currentTyped += ' ';
-        characters++;
-        lastSpace = characters;
-      }
-    }
-    
-    //Check if in upper middle
-    else if (didMouseClick(200+sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
-    {
-      currentWord += '2';
-      characters++;
-      addLetter = true;
-    }
-    
-    //Check if in upper right
-    else if (didMouseClick(200+2*sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
-    {
-      currentWord += '3';
-      characters++;
-      addLetter = true;
-    }
-    
-    //Check if in middle left
-    else if (didMouseClick(200, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
-    {
-      currentWord += '4';
-      characters++;
-      addLetter = true;
-    }
-    
-    //Check if in middle middle
-    else if (didMouseClick(200+sizeOfInputArea/3, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
-    {
-      currentWord += '5';
-      characters++;
-      addLetter = true;
-    }
-    
-    //Check if in middle right
-    else if (didMouseClick(200+2*sizeOfInputArea/3, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
-    {
-      currentWord += '6';
-      characters++;
-      addLetter = true;
-    }
-    
-    //Check if in lower left
-    else if (didMouseClick(200, 200+2*sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
-    {
-      currentWord += '7';
-      characters++;
-      addLetter = true;
-    }
-    
-    //Check if in lower middle
-    else if (didMouseClick(200+sizeOfInputArea/3, 200+2*sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
-    {
-      currentWord += '8';
-      characters++;
-      addLetter = true;
-    }
-    
-    //Check if in lower right
-    else if (didMouseClick(200+2*sizeOfInputArea/3, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea, 200+sizeOfInputArea)) //check if click is in next button
-    {
-      currentWord += '9';
-      characters++;
-      addLetter = true;
-    }
-    
-    System.out.println("currentTyped ******"+currentTyped+"******"+"  currentWord *******"+currentWord+"******");
-    
-    //Predict the word
-    if(addLetter)
-    {
-      System.out.println(lastSpace);
-      if(lastSpace > 0)
-      {
-        currentTyped = currentTyped.substring(0, lastSpace);
-      }
-      else
-      {
+        characters = 0;
         currentTyped = "";
+        currentWord = "";
+        lastSpace = 0;
       }
-      currentTyped += checkWord(currentWord);
     }
+    else
+    {
+      currentWord = "";
+      currentTyped += ' ';
+      characters++;
+      lastSpace = characters;
+    }
+    clickedSpace = false;
   }
-  
-  //You are allowed to have a next button outside the 2" area
-  if (didMouseClick(800, 00, 200, 200)) //check if click is in next button
+  else if(!didMouseClick(200, 200, sizeOfInputArea/3, sizeOfInputArea/3) && clickedSpace)
   {
-    nextTrial(); //if so, advance to next trial
+    if(lastSpace > 0)
+    {
+      currentTyped = currentTyped.substring(0, lastSpace);
+    }
+    else
+    {
+      currentTyped = "";
+    }
+    currentMatchLoc++;
+    if(currentMatchLoc >= currentMatches.size())
+    {
+      currentMatchLoc = 0;
+    }
+    currentTyped += currentMatches.get(currentMatchLoc);
+    
   }
 }
 
 //This function will predict the word
-String checkWord(String currentWord)
+ArrayList <String> checkWord(String currentWord)
 {
-  String word = t.bfs_search(currentWord);
-  if(word != null && !word.equals(""))
+  ArrayList <String> word = t.bfs_search(currentWord);
+  if(word != null && word.size() > 0)
   {
     return word;
   }
@@ -259,18 +311,23 @@ String checkWord(String currentWord)
     for(int i = 0; i < currentWord.length(); i++)
     {
       word = t.bfs_search(currentWord.substring(0,i+1));
-      if(word != null && !word.equals(""))
+      if(word != null && word.size() > 0)
       {
         for(int j = 0; j < i; j++)
         {
-          word += getCharbyNum(currentWord.charAt(currentWord.length()-j-1));
+          for(int k = 0; k < word.size(); k++)
+          {
+            word.set(k, word.get(k)+ getCharbyNum(currentWord.charAt(currentWord.length()-j-1)));
+          }
         }
         return word;
       }
     }
+    
+    word.add("");
     for(int j = 0; j < currentWord.length(); j++)
     {
-      word += getCharbyNum(currentWord.charAt(currentWord.length()-j-1));
+      word.set(0, word.get(0) + getCharbyNum(currentWord.charAt(currentWord.length()-j-1)));
     }
     return word;
   }
@@ -466,8 +523,9 @@ public class Trie {
   }
   
   // breadth first search for a number string use queue
-  public String bfs_search(String strNum) {
+  public ArrayList <String> bfs_search(String strNum) {
     Queue<String> q = new LinkedList<String>();
+    ArrayList <String> matches = new ArrayList <String> ();
     
     q.add("");
     
@@ -481,14 +539,14 @@ public class Trie {
           String tmpStr = preStr + keyStr.charAt(j);
           //q.add(tmpStr);
           if(search(tmpStr) && tmpStr.length() == strNum.length()) {
-            return tmpStr;
+            matches.add(tmpStr);
           } else {
             q.add(tmpStr);
           }
         }
       }
     }
-    return "";
+    return matches;
   }
   
   // delete a node
