@@ -1,3 +1,7 @@
+/*
+* Zach's original code, tweaked by Brandon
+*/
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Queue;
@@ -27,6 +31,10 @@ final int DPIofYourDeviceScreen = 350; //you will need to look up the DPI or PPI
 final float sizeOfInputArea = DPIofYourDeviceScreen*1.25; //aka, 1.25 inches square!
 Trie t;
 
+Button del, abc, def, ghi, jkl, mno, pqrs, tuv, wxyz, space;
+
+
+
 //You can modify anything in here. This is just a basic implementation.
 void setup()
 {
@@ -51,7 +59,7 @@ void draw()
 {
   background(0); //clear background
 
-  fill(100);
+  fill(250);//keys are a light gray
   rect(200, 200, sizeOfInputArea, sizeOfInputArea); //input area should be 2" by 2"
   
 
@@ -85,33 +93,61 @@ void draw()
     text("Target:   " + currentPhrase, 70, 100); //draw the target string
     text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far 
     fill(255, 0, 0);
-    rect(800, 200, 200, 200); //draw next button
+    rect(800, 200, 200, 200); //draw next button next to the input area so it doesn't obscure the phrases
     fill(255);
     text("NEXT > ", 850, 300); //draw next label
 
 
     //draw the grid
-    stroke(255,255,255);
-    line(200, 200+sizeOfInputArea/3, 200+sizeOfInputArea, 200+sizeOfInputArea/3);
-    line(200, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea, 200+2*sizeOfInputArea/3);
-    
-    line(200+sizeOfInputArea/3, 200, 200+sizeOfInputArea/3, 200+sizeOfInputArea);
-    line(200+2*sizeOfInputArea/3, 200, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea);
+    stroke(100);//horizontal
+    line(200, 200+sizeOfInputArea/4, 200+sizeOfInputArea, 200+sizeOfInputArea/4);
+    line(200, 200+2*sizeOfInputArea/4, 200+sizeOfInputArea, 200+2*sizeOfInputArea/4);
+    line(200, 200+3*sizeOfInputArea/4, 200+sizeOfInputArea, 200+3*sizeOfInputArea/4);
+    stroke(150);//vertical
+    line(200+sizeOfInputArea/3, 200, 200+sizeOfInputArea/3, 200+sizeOfInputArea-sizeOfInputArea/4);
+    line(200+2*sizeOfInputArea/3, 200, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea-sizeOfInputArea/4);
     
     //add text to the grid
-    fill(255,255,255);
+//    fill(255);
+//    textAlign(CENTER, CENTER);
+//    text("Del", 200+sizeOfInputArea/6, 200+sizeOfInputArea/6);
+//    text("a,b,c", 200+3*sizeOfInputArea/6, 200+sizeOfInputArea/6);
+//    text("d,e,f", 200+5*sizeOfInputArea/6, 200+sizeOfInputArea/6);
+//    
+//    text("g,h,i", 200+sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
+//    text("j,k,l", 200+3*sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
+//    text("m,n,o", 200+5*sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
+//    
+//    text("p,q,r,s", 200+sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
+//    text("t,u,v", 200+3*sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
+//    text("w,x,y,z", 200+5*sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
+//    
+    fill(100);
+    textSize(42);
     textAlign(CENTER, CENTER);
-    text("Space\nBack", 200+sizeOfInputArea/6, 200+sizeOfInputArea/6);
-    text("A,B,C", 200+3*sizeOfInputArea/6, 200+sizeOfInputArea/6);
-    text("D,E,F", 200+5*sizeOfInputArea/6, 200+sizeOfInputArea/6);
+    del = new Button(200, 200, sizeOfInputArea/3, sizeOfInputArea/4);    
+    text("Del", del);    
+    abc = new Button(200+sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4);
+    text("abc", abc);    
+    def = new Button(200+2*sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4);
+    text("def", def);
     
-    text("G,H,I", 200+sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
-    text("J,K,L", 200+3*sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
-    text("M,N,O", 200+5*sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
+    ghi = new Button(200, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);    
+    text("ghi", ghi);    
+    jkl = new Button(200+sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
+    text("jkl", jkl);    
+    mno = new Button(200+2*sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
+    text("mno", mno);
     
-    text("P,Q,R,S", 200+sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
-    text("T,U,V", 200+3*sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
-    text("W,X,Y,Z", 200+5*sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
+    pqrs = new Button(200, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
+    text("pqrs",pqrs);
+    tuv = new Button(200+sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
+    text("tuv", 200+sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
+    wxyz = new Button(200+2*sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
+    text("wxyz", wxyz);
+    
+    space = new Button(200, 200+3*sizeOfInputArea/4, sizeOfInputArea, sizeOfInputArea/4);
+    text("Space", space);
     
     stroke(0);
   }
@@ -122,6 +158,10 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
   return (mouseX > x && mouseX<x+w && mouseY>y && mouseY<y+h); //check to see if it is in button bounds
 }
 
+boolean didMouseClick(Button b) //simple function to do hit testing
+{
+  return (mouseX > b.x && mouseX<b.x+b.width && mouseY>b.y && mouseY<b.y+b.height); //check to see if it is in button bounds
+}
 
 void mousePressed()
 {
@@ -129,13 +169,14 @@ void mousePressed()
   {
     boolean addLetter = false;
     //Check if in upper left
-    if (didMouseClick(200, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    if (didMouseClick(del)) //check if click is in next button
     {
-      clickedSpace = true;
+      //clickedSpace = true;
+      //delete a char
     }
     
     //Check if in upper middle
-    else if (didMouseClick(200+sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    else if (didMouseClick(abc)) //check if click is in next button
     {
       clickedSpace = false;
       currentWord += '2';
@@ -144,7 +185,7 @@ void mousePressed()
     }
     
     //Check if in upper right
-    else if (didMouseClick(200+2*sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    else if (didMouseClick(def)) //check if click is in next button
     {
       clickedSpace = false;
       currentWord += '3';
@@ -153,7 +194,7 @@ void mousePressed()
     }
     
     //Check if in middle left
-    else if (didMouseClick(200, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    else if (didMouseClick(ghi)) //check if click is in next button
     {
       clickedSpace = false;
       currentWord += '4';
@@ -162,7 +203,7 @@ void mousePressed()
     }
     
     //Check if in middle middle
-    else if (didMouseClick(200+sizeOfInputArea/3, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    else if (didMouseClick(jkl)) //check if click is in next button
     {
       clickedSpace = false;
       currentWord += '5';
@@ -171,7 +212,7 @@ void mousePressed()
     }
     
     //Check if in middle right
-    else if (didMouseClick(200+2*sizeOfInputArea/3, 200+sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    else if (didMouseClick(mno)) //check if click is in next button
     {
       clickedSpace = false;
       currentWord += '6';
@@ -180,7 +221,7 @@ void mousePressed()
     }
     
     //Check if in lower left
-    else if (didMouseClick(200, 200+2*sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    else if (didMouseClick(pqrs)) //check if click is in next button
     {
       clickedSpace = false;
       currentWord += '7';
@@ -189,7 +230,7 @@ void mousePressed()
     }
     
     //Check if in lower middle
-    else if (didMouseClick(200+sizeOfInputArea/3, 200+2*sizeOfInputArea/3, sizeOfInputArea/3, sizeOfInputArea/3)) //check if click is in next button
+    else if (didMouseClick(tuv)) //check if click is in next button
     {
       clickedSpace = false;
       currentWord += '8';
@@ -198,12 +239,17 @@ void mousePressed()
     }
     
     //Check if in lower right
-    else if (didMouseClick(200+2*sizeOfInputArea/3, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea, 200+sizeOfInputArea)) //check if click is in next button
+    else if (didMouseClick(wxyz)) //check if click is in next button
     {
       clickedSpace = false;
       currentWord += '9';
       characters++;
       addLetter = true;
+    }
+    
+    else if (didMouseClick(space))
+    {
+      clickedSpace = true;
     }
     
     
@@ -489,10 +535,27 @@ int computeLevenshteinDistance(String phrase1, String phrase2)
   return distance[phrase1.length()][phrase2.length()];
 }
 
+public class Button {
+  public float x,y;
+  public float width,height;
+  
+  public Button(float x, float y, float width, float height)
+  {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  } 
+  
+}
 
+public void rect(Button b) {
+  rect(b.x, b.y, b.width, b.height);
+}
 
-
-
+public void text(String str, Button b) {
+  text(str, b.x, b.y, b.width, b.height);
+}
 
 
 
