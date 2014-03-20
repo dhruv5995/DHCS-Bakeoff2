@@ -53327,8 +53327,8 @@ tumbrils
 tumescent
 tummies
 tummy
-tumour
-tumours
+tumor
+tumors
 tumult
 tumults
 tumultuous
