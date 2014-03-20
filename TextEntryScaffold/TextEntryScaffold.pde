@@ -22,7 +22,7 @@ int lastSpace = 0;
 ArrayList <String> currentMatches;
 int currentMatchLoc = 0;
 boolean clickedSpace = false;
-final int DPIofYourDeviceScreen = 326; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
+final int DPIofYourDeviceScreen = 350; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
                                       //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1.25; //aka, 1.25 inches square!
 Trie t;
@@ -33,7 +33,7 @@ void setup()
   phrases = loadStrings("phrases2.txt"); //load the phrase set into memory
   Collections.shuffle(Arrays.asList(phrases)); //randomize the order of the phrases
   orientation(PORTRAIT); //can also be LANDSCAPE -- sets orientation on android device
-  size(1000, 500); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
+  size(1000, 1000); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 36)); //set the font to arial 36
   noStroke(); //my code doesn't use any strokes.
   
@@ -85,7 +85,7 @@ void draw()
     text("Target:   " + currentPhrase, 70, 100); //draw the target string
     text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far 
     fill(255, 0, 0);
-    rect(800, 00, 200, 200); //drag next button
+    rect(800, 00, 200, 200); //draw next button
     fill(255);
     text("NEXT > ", 850, 100); //draw next label
 
@@ -223,13 +223,12 @@ void mousePressed()
       currentMatchLoc = 0;
       currentTyped += currentMatches.get(0);
     }
-  }
-  
-  //You are allowed to have a next button outside the 2" area
-  if (didMouseClick(800, 00, 200, 200)) //check if click is in next button
-  {
-    clickedSpace = false;
-    nextTrial(); //if so, advance to next trial
+    //You are allowed to have a next button outside the 2" area
+    if (didMouseClick(800, 00, 200, 200)) //check if click is in next button
+    {
+      clickedSpace = false;
+      nextTrial(); //if so, advance to next trial
+    }
   }
 }
 
