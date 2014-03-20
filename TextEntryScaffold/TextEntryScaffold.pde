@@ -1,5 +1,6 @@
 /*
 * Zach's original code, tweaked by Brandon
+* 3/20/14
 */
 
 import java.util.Arrays;
@@ -60,7 +61,7 @@ void draw()
 {
   background(0); //clear background
 
-  fill(250);//keys are a light gray
+  fill(75);//keys are a light gray
   rect(200, 200, sizeOfInputArea, sizeOfInputArea); //input area should be 2" by 2"
   
 
@@ -89,30 +90,9 @@ void draw()
     text("Target:   " + currentPhrase, 70, 100); //draw the target string
     text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far
        
-    
+    textAlign(CENTER, CENTER); 
     next = new Button(800, 200, 200, 200, "NEXT>", color(255), color(255,0,0));
     next.draw(); 
-    //fill(255, 0, 0);
-    //rect(next); //draw next button next to the input area so it doesn't obscure the phrases
-    //fill(255);
-    //textAlign(CENTER, CENTER);
-    //text("NEXT > ", next); //draw next label
-
-
-    //draw the grid
-    stroke(100);//horizontal
-    line(200, 200+sizeOfInputArea/4, 200+sizeOfInputArea, 200+sizeOfInputArea/4);
-    line(200, 200+2*sizeOfInputArea/4, 200+sizeOfInputArea, 200+2*sizeOfInputArea/4);
-    line(200, 200+3*sizeOfInputArea/4, 200+sizeOfInputArea, 200+3*sizeOfInputArea/4);
-    stroke(150);//vertical
-    line(200+sizeOfInputArea/3, 200, 200+sizeOfInputArea/3, 200+sizeOfInputArea-sizeOfInputArea/4);
-    line(200+2*sizeOfInputArea/3, 200, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea-sizeOfInputArea/4);
-    
-    //add text to the grid
-
-   
-    
-    //fill(TEXT_color); //text color
     
     color btnText = color(100);
     color btnFill = color(250);
