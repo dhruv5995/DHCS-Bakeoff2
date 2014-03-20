@@ -31,7 +31,7 @@ final int DPIofYourDeviceScreen = 350; //you will need to look up the DPI or PPI
 final float sizeOfInputArea = DPIofYourDeviceScreen*1.25; //aka, 1.25 inches square!
 Trie t;
 
-Button del, abc, def, ghi, jkl, mno, pqrs, tuv, wxyz, space;
+Button del, abc, def, ghi, jkl, mno, pqrs, tuv, wxyz, space, next;
 
 
 
@@ -91,11 +91,14 @@ void draw()
     text("Phrase " + (currTrialNum+1) + " of " + totalTrialNum, 70, 50); //draw the trial count
     fill(255);
     text("Target:   " + currentPhrase, 70, 100); //draw the target string
-    text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far 
+    text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far
+   
+    next = new Button(800, 200, 200, 200, "NEXT>"); 
     fill(255, 0, 0);
-    rect(800, 200, 200, 200); //draw next button next to the input area so it doesn't obscure the phrases
+    rect(next); //draw next button next to the input area so it doesn't obscure the phrases
     fill(255);
-    text("NEXT > ", 850, 300); //draw next label
+    textAlign(CENTER, CENTER);
+    text("NEXT > ", next); //draw next label
 
 
     //draw the grid
@@ -108,46 +111,33 @@ void draw()
     line(200+2*sizeOfInputArea/3, 200, 200+2*sizeOfInputArea/3, 200+sizeOfInputArea-sizeOfInputArea/4);
     
     //add text to the grid
-//    fill(255);
-//    textAlign(CENTER, CENTER);
-//    text("Del", 200+sizeOfInputArea/6, 200+sizeOfInputArea/6);
-//    text("a,b,c", 200+3*sizeOfInputArea/6, 200+sizeOfInputArea/6);
-//    text("d,e,f", 200+5*sizeOfInputArea/6, 200+sizeOfInputArea/6);
-//    
-//    text("g,h,i", 200+sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
-//    text("j,k,l", 200+3*sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
-//    text("m,n,o", 200+5*sizeOfInputArea/6, 200+3*sizeOfInputArea/6);
-//    
-//    text("p,q,r,s", 200+sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
-//    text("t,u,v", 200+3*sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
-//    text("w,x,y,z", 200+5*sizeOfInputArea/6, 200+5*sizeOfInputArea/6);
-//    
+
     fill(100);
     textSize(42);
     textAlign(CENTER, CENTER);
-    del = new Button(200, 200, sizeOfInputArea/3, sizeOfInputArea/4);    
-    text("Del", del);    
-    abc = new Button(200+sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4);
-    text("abc", abc);    
-    def = new Button(200+2*sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4);
-    text("def", def);
+    del = new Button(200, 200, sizeOfInputArea/3, sizeOfInputArea/4, "Del");    
+    del.draw();    
+    abc = new Button(200+sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4, "abc");     
+    abc.draw();
+    def = new Button(200+2*sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4, "def");
+    def.draw();
     
-    ghi = new Button(200, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);    
-    text("ghi", ghi);    
-    jkl = new Button(200+sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
-    text("jkl", jkl);    
-    mno = new Button(200+2*sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
-    text("mno", mno);
+    ghi = new Button(200, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "ghi");    
+    ghi.draw();
+    jkl = new Button(200+sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "jkl");
+    jkl.draw();    
+    mno = new Button(200+2*sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "mno");
+    mno.draw();
     
-    pqrs = new Button(200, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
-    text("pqrs",pqrs);
-    tuv = new Button(200+sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
-    text("tuv", 200+sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
-    wxyz = new Button(200+2*sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4);
-    text("wxyz", wxyz);
+    pqrs = new Button(200, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "pqrs");
+    pqrs.draw();
+    tuv = new Button(200+sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "tuv");
+    tuv.draw();
+    wxyz = new Button(200+2*sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "wxyz");
+    wxyz.draw();
     
-    space = new Button(200, 200+3*sizeOfInputArea/4, sizeOfInputArea, sizeOfInputArea/4);
-    text("Space", space);
+    space = new Button(200, 200+3*sizeOfInputArea/4, sizeOfInputArea, sizeOfInputArea/4, "Space");
+    space.draw();
     
     stroke(0);
   }
@@ -269,8 +259,9 @@ void mousePressed()
       currentMatchLoc = 0;
       currentTyped += currentMatches.get(0);
     }
+    
     //You are allowed to have a next button outside the 2" area
-    if (didMouseClick(800, 00, 200, 200)) //check if click is in next button
+    if (didMouseClick(next)) //check if click is in next button
     {
       clickedSpace = false;
       nextTrial(); //if so, advance to next trial
@@ -280,7 +271,7 @@ void mousePressed()
 
 void mouseReleased()
 {
-  if (didMouseClick(200, 200, sizeOfInputArea/3, sizeOfInputArea/3) && clickedSpace) //check if click is in next button
+  if (didMouseClick(del) && clickedSpace) //check if click is in next button
   {
     if(lastSpace == characters)
     {
@@ -538,14 +529,21 @@ int computeLevenshteinDistance(String phrase1, String phrase2)
 public class Button {
   public float x,y;
   public float width,height;
+  public String text = "btn";
   
-  public Button(float x, float y, float width, float height)
+  public Button(float x, float y, float width, float height, String text)
   {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.text = text;
   } 
+  
+  public void draw()
+  {
+    text(text, this);
+  }
   
 }
 
