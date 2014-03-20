@@ -85,9 +85,9 @@ void draw()
     text("Target:   " + currentPhrase, 70, 100); //draw the target string
     text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far 
     fill(255, 0, 0);
-    rect(800, 00, 200, 200); //draw next button
+    rect(800, 200, 200, 200); //draw next button
     fill(255);
-    text("NEXT > ", 850, 100); //draw next label
+    text("NEXT > ", 850, 300); //draw next label
 
 
     //draw the grid
