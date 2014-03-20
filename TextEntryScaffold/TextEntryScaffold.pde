@@ -21,7 +21,6 @@ float errorsTotal = 0; //a running total of the number of errors (when hitting n
 String currentPhrase = ""; //the current target phrase
 String currentTyped = ""; //what the user has typed so far
 String currentWord = "";
-int characters = 0;
 int lastSpace = 0;
 float pressX = 0;
 float pressY = 0;
@@ -201,6 +200,10 @@ void mousePressed()
     {
       touchedButton = space; 
     }
+    else if(didMouseClick(next))
+    {
+      touchedButton = next;
+    }
   }
 }
 
@@ -214,12 +217,12 @@ void mouseReleased()
       //Check if in upper left
       if (didMouseClick(del)) //check if click is in Delete button
       {
-        characters--;
-        if(characters > 0)
-        // If we have characters
+        if(currentTyped.length() > 0)
+        // If we have 
         {
+          currentTyped = currentTyped.substring(0,currentTyped.length()-1);
           boolean foundSpace = false;
-          for(int j = characters; j >= 0; j--)
+          for(int j = currentTyped.length()-1; j >= 0; j--)
           {
             if(currentTyped.charAt(j) == ' ')
             {
@@ -231,16 +234,19 @@ void mouseReleased()
           if(!foundSpace)
           {
             lastSpace = 0;
+            currentWord = currentTyped.substring(0,currentTyped.length());
           }
-          currentTyped = currentTyped.substring(0,characters);
-          currentWord = currentTyped.substring(lastSpace,characters);
+          else
+          {
+            currentWord = currentTyped.substring(lastSpace+1,currentTyped.length());
+          }
+          System.out.println(lastSpace);
           currentWord = convertLetterstoNumbers(currentWord);
           System.out.println("currentTyped ******"+currentTyped+"******"+"  currentWord *******"+currentWord+"******");
         }
         else
         //If deleted everything
         {
-          characters = 0;
           currentTyped = "";
           currentWord = "";
           lastSpace = 0;
@@ -252,7 +258,7 @@ void mouseReleased()
       {
         
         currentWord += '2';
-        characters++;
+        
         addLetter = true;
       }
       
@@ -261,7 +267,7 @@ void mouseReleased()
       {
         
         currentWord += '3';
-        characters++;
+        
         addLetter = true;
       }
       
@@ -270,7 +276,7 @@ void mouseReleased()
       {
         
         currentWord += '4';
-        characters++;
+        
         addLetter = true;
       }
       
@@ -279,7 +285,7 @@ void mouseReleased()
       {
         
         currentWord += '5';
-        characters++;
+        
         addLetter = true;
       }
       
@@ -288,7 +294,7 @@ void mouseReleased()
       {
         
         currentWord += '6';
-        characters++;
+        
         addLetter = true;
       }
       
@@ -297,7 +303,7 @@ void mouseReleased()
       {
         
         currentWord += '7';
-        characters++;
+        
         addLetter = true;
       }
       
@@ -306,7 +312,7 @@ void mouseReleased()
       {
         
         currentWord += '8';
-        characters++;
+        
         addLetter = true;
       }
       
@@ -315,7 +321,7 @@ void mouseReleased()
       {
         
         currentWord += '9';
-        characters++;
+        
         addLetter = true;
       }
       
@@ -323,8 +329,8 @@ void mouseReleased()
       {
         currentWord = "";
         currentTyped += ' ';
-        characters++;
-        lastSpace = characters;
+        
+        lastSpace = currentTyped.length()-1;
       }
       
       
@@ -334,7 +340,8 @@ void mouseReleased()
         System.out.println(lastSpace);
         if(lastSpace > 0)
         {
-          currentTyped = currentTyped.substring(0, lastSpace);
+          currentTyped = currentTyped.substring(0, lastSpace+1);
+          System.out.println("****"+currentTyped+"****     ****"+currentWord+"****");
         }
         else
         {
@@ -520,7 +527,6 @@ void nextTrial()
   lastTime = millis(); //record the time of when this trial ended
   currentTyped = ""; //clear what is currently typed preparing for next trial
   currentWord = "";
-  characters = 0;
   lastSpace = 0;
   currentPhrase = phrases[currTrialNum]; // load the next phrase!
   //currentPhrase = "abc"; // uncomment this to override the test phrase (useful for debugging)
