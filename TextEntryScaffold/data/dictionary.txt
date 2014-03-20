@@ -3657,6 +3657,7 @@ baits
 bake
 baked
 bakehouse
+bakeoffs
 baker
 bakeries
 bakers
@@ -7869,7 +7870,6 @@ chaperones
 chaplain
 chaplaincy
 chaplains
-chaplain
 chapman
 chapped
 chapping
@@ -8113,6 +8113,7 @@ chesty
 chevalier
 chevron
 chevrons
+chevy
 chew
 chewable
 chewed
@@ -8646,6 +8647,7 @@ clatter
 clattered
 clattering
 clatters
+claus
 clausal
 clause
 clauses
@@ -13840,6 +13842,7 @@ dextral
 dextrose
 dextrous
 dextrously
+dhcs
 dhow
 diabetes
 diabetic
@@ -15354,6 +15357,7 @@ dover
 doves
 dovetail
 dovetails
+dow
 dowager
 dowagers
 dowdier
@@ -18702,7 +18706,6 @@ fallopian
 fallout
 fallow
 falls
-false
 falsebay
 falsehood
 falsehoods
@@ -18923,6 +18926,7 @@ faunas
 fauns
 faust
 faustus
+favorite
 favour
 favourable
 favourably
@@ -19683,6 +19687,7 @@ flaunted
 flaunting
 flaunts
 flautist
+flavored
 flavour
 flavoured
 flavouring
@@ -22079,6 +22084,7 @@ goitres
 gold
 golden
 goldfish
+goldilocks
 golds
 goldsmith
 goldsmiths
@@ -23361,6 +23367,7 @@ harridan
 harried
 harrier
 harriers
+harrison
 harrow
 harrowed
 harrowing
@@ -27752,6 +27759,7 @@ jealousies
 jealously
 jealousy
 jeans
+jedi
 jeep
 jeeps
 jeer
@@ -27916,6 +27924,7 @@ jolting
 jolts
 jonah
 jonathan
+jones
 joseph
 joshua
 jostle
@@ -29233,6 +29242,7 @@ lettuces
 leucine
 leukaemia
 leukemia
+levee
 level
 levelheaded
 levelled
@@ -30271,6 +30281,7 @@ luxuriously
 luxury
 lychee
 lychees
+lydia
 lye
 lying
 lymph
@@ -34872,6 +34883,8 @@ organism
 organisms
 organist
 organists
+organization
+organize
 organs
 organza
 orgies
@@ -36029,6 +36042,7 @@ parked
 parking
 parkland
 parks
+parkways
 parlance
 parley
 parleying
@@ -44333,6 +44347,7 @@ sanity
 sank
 sanserif
 sanskrit
+santa
 santiago
 sap
 sapient
@@ -50731,6 +50746,7 @@ tablespoon
 tablespoonfuls
 tablespoons
 tablet
+tabletop
 tablets
 tableware
 tabling
@@ -52842,6 +52858,7 @@ traumatised
 travail
 travails
 travel
+traveling
 travelled
 traveller
 travellers
@@ -53209,7 +53226,6 @@ trudge
 trudged
 trudges
 trudging
-true
 trueblue
 truer
 truest
@@ -53328,7 +53344,8 @@ tumescent
 tummies
 tummy
 tumor
-tumors
+tumour
+tumours
 tumult
 tumults
 tumultuous
@@ -55581,6 +55598,7 @@ validation
 validity
 validly
 valise
+valium
 valley
 valleys
 valour
@@ -58109,3 +58127,5 @@ zooplankton
 zoos
 zulu
 zulus
+false
+true

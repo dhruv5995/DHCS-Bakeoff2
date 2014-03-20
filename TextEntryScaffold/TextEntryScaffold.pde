@@ -28,7 +28,7 @@ float pressY = 0;
 Button touchedButton;
 ArrayList <String> currentMatches;
 int currentMatchLoc = 0;
-final int DPIofYourDeviceScreen = 350; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
+final int DPIofYourDeviceScreen = 480; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
                                       //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1.25; //aka, 1.25 inches square!
 Trie t;
@@ -200,6 +200,10 @@ void mousePressed()
     else if(didMouseClick(space))
     {
       touchedButton = space; 
+    }
+    else if(didMouseClick(next))
+    {
+      touchedButton = next;
     }
   }
 }
