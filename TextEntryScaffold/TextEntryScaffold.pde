@@ -88,13 +88,15 @@ void draw()
     fill(255);
     text("Target:   " + currentPhrase, 70, 100); //draw the target string
     text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far
-   
-    next = new Button(800, 200, 200, 200, "NEXT>"); 
-    fill(255, 0, 0);
-    rect(next); //draw next button next to the input area so it doesn't obscure the phrases
-    fill(255);
-    textAlign(CENTER, CENTER);
-    text("NEXT > ", next); //draw next label
+       
+    
+    next = new Button(800, 200, 200, 200, "NEXT>", color(255), color(255,0,0));
+    next.draw(); 
+    //fill(255, 0, 0);
+    //rect(next); //draw next button next to the input area so it doesn't obscure the phrases
+    //fill(255);
+    //textAlign(CENTER, CENTER);
+    //text("NEXT > ", next); //draw next label
 
 
     //draw the grid
@@ -108,31 +110,37 @@ void draw()
     
     //add text to the grid
 
-    fill(100);
+   
+    
+    //fill(TEXT_color); //text color
+    
+    color btnText = color(100);
+    color btnFill = color(250);
+    
     textSize(42);
     textAlign(CENTER, CENTER);
-    del = new Button(200, 200, sizeOfInputArea/3, sizeOfInputArea/4, "Del");    
+    del = new Button(200, 200, sizeOfInputArea/3, sizeOfInputArea/4, "Del", btnText, btnFill);    
     del.draw();    
-    abc = new Button(200+sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4, "abc");     
+    abc = new Button(200+sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4, "abc", btnText, btnFill);     
     abc.draw();
-    def = new Button(200+2*sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4, "def");
+    def = new Button(200+2*sizeOfInputArea/3, 200, sizeOfInputArea/3, sizeOfInputArea/4, "def", btnText, btnFill);
     def.draw();
     
-    ghi = new Button(200, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "ghi");    
+    ghi = new Button(200, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "ghi", btnText, btnFill);    
     ghi.draw();
-    jkl = new Button(200+sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "jkl");
+    jkl = new Button(200+sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "jkl", btnText, btnFill);
     jkl.draw();    
-    mno = new Button(200+2*sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "mno");
+    mno = new Button(200+2*sizeOfInputArea/3, 200+sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "mno", btnText, btnFill);
     mno.draw();
     
-    pqrs = new Button(200, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "pqrs");
+    pqrs = new Button(200, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "pqrs", btnText, btnFill);
     pqrs.draw();
-    tuv = new Button(200+sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "tuv");
+    tuv = new Button(200+sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "tuv", btnText, btnFill);
     tuv.draw();
-    wxyz = new Button(200+2*sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "wxyz");
+    wxyz = new Button(200+2*sizeOfInputArea/3, 200+2*sizeOfInputArea/4, sizeOfInputArea/3, sizeOfInputArea/4, "wxyz", btnText, btnFill);
     wxyz.draw();
     
-    space = new Button(200, 200+3*sizeOfInputArea/4, sizeOfInputArea, sizeOfInputArea/4, "Space");
+    space = new Button(200, 200+3*sizeOfInputArea/4, sizeOfInputArea, sizeOfInputArea/4, "Space", btnText, btnFill);
     space.draw();
     
     stroke(0);
@@ -364,7 +372,7 @@ void mouseReleased()
     {
       if(lastSpace > 0)
       {
-        currentTyped = currentTyped.substring(0, lastSpace);
+        currentTyped = currentTyped.substring(0, lastSpace+1);
       }
       else
       {
@@ -577,22 +585,47 @@ int computeLevenshteinDistance(String phrase1, String phrase2)
 }
 
 public class Button {
-  public float x,y;
-  public float width,height;
-  public String text = "btn";
+  public float x,y, width,height;
+  public String text = "btn"; //default text for a button. shrug/
+  public color textColor, buttonColor;
   
-  public Button(float x, float y, float width, float height, String text)
+  public Button(float x, float y, float width, float height, String text, color textColor, color buttonColor)
   {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.text = text;
+    this.textColor = textColor;
+    this.buttonColor = buttonColor;
   } 
   
+  //getters for textColor and fill
+  public color gettextColor()
+  {return textColor;}
+  public color getbuttonColor()
+  {return buttonColor;}
+  
+  //setters for textColor and fill
+  public void settextColor(color tc)
+  {this.textColor = tc;}
+  public void setbuttonColor(color bc)
+  {this.buttonColor = bc;}
+    
+  //Draw the text with the textColor and the button with the fill color
   public void draw()
-  {
+  { 
+    //the button itself
+    fill(buttonColor);
+    stroke(150); //set border color
+    rect(x,y,width,height);
+    
+   //text in the button   
+    fill(textColor);    
     text(text, this);
+
+  //CAREFUL - this will overwrite the fill and stroke that you had before.
+  //TODO: Figure out how to query current fill() and stroke()  
   }
   
 }
