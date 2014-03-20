@@ -22,7 +22,7 @@ int lastSpace = 0;
 ArrayList <String> currentMatches;
 int currentMatchLoc = 0;
 boolean clickedSpace = false;
-final int DPIofYourDeviceScreen = 441; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
+final int DPIofYourDeviceScreen = 326; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
                                       //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1.25; //aka, 1.25 inches square!
 Trie t;
@@ -33,7 +33,7 @@ void setup()
   phrases = loadStrings("phrases2.txt"); //load the phrase set into memory
   Collections.shuffle(Arrays.asList(phrases)); //randomize the order of the phrases
   orientation(PORTRAIT); //can also be LANDSCAPE -- sets orientation on android device
-  size(1000, 1000); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
+  size(1000, 500); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 36)); //set the font to arial 36
   noStroke(); //my code doesn't use any strokes.
   
@@ -101,7 +101,7 @@ void draw()
     //add text to the grid
     fill(255,255,255);
     textAlign(CENTER, CENTER);
-    text("Space\nBackspace", 200+sizeOfInputArea/6, 200+sizeOfInputArea/6);
+    text("Space\nBack", 200+sizeOfInputArea/6, 200+sizeOfInputArea/6);
     text("A,B,C", 200+3*sizeOfInputArea/6, 200+sizeOfInputArea/6);
     text("D,E,F", 200+5*sizeOfInputArea/6, 200+sizeOfInputArea/6);
     
@@ -206,7 +206,6 @@ void mousePressed()
       addLetter = true;
     }
     
-    System.out.println("currentTyped ******"+currentTyped+"******"+"  currentWord *******"+currentWord+"******");
     
     //Predict the word
     if(addLetter)
@@ -260,6 +259,7 @@ void mouseReleased()
         currentTyped = currentTyped.substring(0,characters);
         currentWord = currentTyped.substring(lastSpace,characters);
         currentWord = convertLetterstoNumbers(currentWord);
+        System.out.println("currentTyped ******"+currentTyped+"******"+"  currentWord *******"+currentWord+"******");
       }
       else
       {
@@ -301,6 +301,7 @@ void mouseReleased()
 //This function will predict the word
 ArrayList <String> checkWord(String currentWord)
 {
+  currentWord = currentWord.trim();
   ArrayList <String> word = t.bfs_search(currentWord);
   if(word != null && word.size() > 0)
   {
@@ -308,12 +309,13 @@ ArrayList <String> checkWord(String currentWord)
   }
   else
   {
-    for(int i = 0; i < currentWord.length(); i++)
+    for(int i = currentWord.length(); i >=0 ; i--)
     {
-      word = t.bfs_search(currentWord.substring(0,i+1));
+      word = t.bfs_search(currentWord.substring(0,i));
       if(word != null && word.size() > 0)
       {
-        for(int j = 0; j < i; j++)
+        System.out.println(word.get(0));
+        for(int j = i; j < currentWord.length(); j++)
         {
           for(int k = 0; k < word.size(); k++)
           {
@@ -335,19 +337,56 @@ ArrayList <String> checkWord(String currentWord)
 
 String convertLetterstoNumbers(String word)
 {
+  String val = "";
+  System.out.println(word);
   for(int i = 0; i < word.length(); i++)
   {
-    if(word.charAt(i) > 57)
-    {
-      word = word.substring(0,i)+convertCharToNum(word.charAt(i))+word.substring(i+1);
-    }
+    System.out.println(word.charAt(i)+"    "+convertCharacterToNum(word.charAt(i)));
+    val += convertCharacterToNum(word.charAt(i));
   }
-  return word; 
+  return val; 
 }
 
-int convertCharToNum(char letter)
+char convertCharacterToNum(char letter)
 {
-  return letter - 'a';
+  switch(letter)
+  {
+    case 'a':
+    case 'b':
+    case 'c':
+      return '2';
+    case 'd':
+    case 'e':
+    case 'f':
+      return '3';
+    case 'g':
+    case 'h':
+    case 'i':
+      return '4';
+    case 'j':
+    case 'k':
+    case 'l':
+      return '5';
+    case 'm':
+    case 'n':
+    case 'o':
+      return '6';
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+      return '7';
+    case 't':
+    case 'u':
+    case 'v':
+      return '8';
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':
+      return '9';
+  }
+  return ' ';
 }
 
 
