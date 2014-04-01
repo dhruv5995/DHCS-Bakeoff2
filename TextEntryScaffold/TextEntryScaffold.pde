@@ -28,6 +28,7 @@ float pressY = 0;
 Button touchedButton;
 ArrayList <String> currentMatches;
 int currentMatchLoc = 0;
+boolean pressed = false;
 final int DPIofYourDeviceScreen = 480; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
                                       //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1.25; //aka, 1.25 inches square!
@@ -124,6 +125,23 @@ void draw()
     space.draw();
     
     stroke(0);
+ 
+    if(touchedButton != null)
+    {   
+      if(pressed)
+      {
+        if(insideButton(touchedButton, mouseX, mouseY))
+        {
+          touchedButton.setbuttonColor(color(102,255,0));
+          touchedButton.draw();
+        }
+      }
+      else
+      {
+        touchedButton.setbuttonColor(color(250));
+        touchedButton.draw();
+      }
+    }
   }
 }
 
@@ -146,6 +164,7 @@ void mousePressed()
 {
   if(startTime > 0)
   {
+    pressed = true;
     pressX = mouseX;
     pressY = mouseY;
     if(didMouseClick(del))
@@ -199,6 +218,7 @@ void mouseReleased()
 {
   if(startTime > 0)
   {
+    pressed = false;
     if(insideButton(touchedButton, mouseX, mouseY))
     {
       boolean addLetter = false;
@@ -350,21 +370,24 @@ void mouseReleased()
     else
     //Handle swipe
     {
-      if(lastSpace > 0)
-      {
-        currentTyped = currentTyped.substring(0, lastSpace+1);
-      }
-      else
-      {
-        currentTyped = "";
-      }
-      currentMatchLoc++;
-      if(currentMatchLoc >= currentMatches.size())
-      {
-        currentMatchLoc = 0;
-      }
-      currentTyped += currentMatches.get(currentMatchLoc);
-      }
+      if(currentTyped.length() > 0)
+        {
+        if(lastSpace > 0)
+        {
+          currentTyped = currentTyped.substring(0, lastSpace+1);
+        }
+        else
+        {
+          currentTyped = "";
+        }
+        currentMatchLoc++;
+        if(currentMatchLoc >= currentMatches.size())
+        {
+          currentMatchLoc = 0;
+        }
+        currentTyped += currentMatches.get(currentMatchLoc);
+        }
+    }
   }
   else
   {
@@ -384,6 +407,7 @@ ArrayList <String> checkWord(String currentWord)
   }
   else
   {
+    
     for(int i = currentWord.length(); i >=0 ; i--)
     {
       word = t.bfs_search(currentWord.substring(0,i));
@@ -394,7 +418,8 @@ ArrayList <String> checkWord(String currentWord)
         {
           for(int k = 0; k < word.size(); k++)
           {
-            word.set(k, word.get(k)+ getCharbyNum(currentWord.charAt(currentWord.length()-j-1)));
+            int loc = currentWord.length()-j-1;
+            word.set(k, word.get(k)+ getCharbyNum(currentWord.charAt(currentWord.length()-loc-1)));
           }
         }
         return word;
@@ -684,6 +709,20 @@ public class Trie {
     return current.isWord == true;
   }
   
+  // search a word in the trie
+  public boolean searchForPartial(String s) {
+    Node current = root;
+    
+    for(int i = 0; i < s.length(); i++) {
+      if(current.next[s.charAt(i) - 'a'] == null) {
+        return false;
+      } 
+      current = current.next[s.charAt(i) - 'a'];
+    }
+    
+    return true;
+  }
+  
   // breadth first search for a number string use queue
   public ArrayList <String> bfs_search(String strNum) {
     Queue<String> q = new LinkedList<String>();
@@ -700,10 +739,13 @@ public class Trie {
         for(int j = 0; j < keyStr.length(); j++) {
           String tmpStr = preStr + keyStr.charAt(j);
           //q.add(tmpStr);
-          if(search(tmpStr) && tmpStr.length() == strNum.length()) {
+          if(tmpStr.length() == strNum.length() && search(tmpStr)) {
             matches.add(tmpStr);
           } else {
-            q.add(tmpStr);
+            if(searchForPartial(tmpStr))
+            {
+              q.add(tmpStr);
+            }
           }
         }
       }
